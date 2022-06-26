@@ -1,2 +1,2 @@
 # picasso
-Testing 123
+An evolution based genetic image generator built in python
