@@ -8,6 +8,7 @@ baseR, baseG, baseB = 128, 128, 128
 im = Image.new('RGB', (width, height), (baseR, baseG, baseB))
 draw = ImageDraw.Draw(im)
 frame = im.copy()
+frame = frame.quantize(method=Image.MEDIANCUT)
 frames.append(frame)
 
 for _ in range(50):
@@ -17,7 +18,8 @@ for _ in range(50):
     colR, colG, colB = randint(0, 225), randint(0, 255), randint(0, 255)
     draw.ellipse((ranX - ranR, ranY - ranR, ranX + ranR, ranY + ranR), fill=(colR, colG, colB))
     frame = im.copy()
+    frame = frame.quantize(method=Image.MEDIANCUT)
     frames.append(frame)
 
-im.save('img/pillow_demo.jpg', quality = 100)
-frames[0].save('img/pillow_gif_demo.gif',  save_all=True, append_images=frames[1:], optimize=False, duration=40, loop=0)
+frames[5].save('img/pillow_demo.png', quality = 100)
+frames[0].save('img/pillow_gif_demo.gif',  save_all=True, append_images=frames[1:], optimize=False, duration=100, loop=0, quality = 100)
