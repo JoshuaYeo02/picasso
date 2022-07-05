@@ -14,6 +14,7 @@ class Img {
         int height;
         vector<vector<Pixel>> pixels;
     public:
+        Img();
         Img(int w, int h);
         Img(string const file);
         Img(Img const& o);

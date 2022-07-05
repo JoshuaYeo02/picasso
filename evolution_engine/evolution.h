@@ -2,6 +2,7 @@
 #define EVOLTUION_H
 #include "../img_engine/img.h"
 #include <vector>
+#include <string>
 
 class Evolution {
     public:

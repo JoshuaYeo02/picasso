@@ -1,6 +1,10 @@
 #include "img.h"
 using namespace std;
 
+Img::Img() {
+	width = 0;
+	height = 0;
+}
 Img::Img(int w, int h) {
     width = w;
     height = h;
