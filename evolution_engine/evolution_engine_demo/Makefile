@@ -5,6 +5,7 @@ LINKER = g++
 
 evolution_engine_example : evolution_engine_example.o evolution.o img.o pixel.o
 	$(LINKER) evolution_engine_example.o evolution.o img.o pixel.o -lpng -o demo
+	rm -rf *.o
 evolution_engine_example.o : evolution_engine_example.cpp
 	$(COMPILER) $(COMPILER_FLAGS) evolution_engine_example.cpp
 evolution.o : ../evolution.h ../evolution.cpp

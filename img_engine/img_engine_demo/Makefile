@@ -5,6 +5,7 @@ LINKER = g++
 
 img_engine_example : img_engine_example.o img.o pixel.o
 	$(LINKER) img_engine_example.o img.o pixel.o -lpng -o demo
+	rm -f *.o
 img_engine_example.o : img_engine_example.cpp
 	$(COMPILER) $(COMPILER_FLAGS) img_engine_example.cpp
 img.o : ../img.h ../img.cpp
