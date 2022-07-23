@@ -239,3 +239,41 @@ int Img::getWidth() {
 int Img::getHeight() {
     return height;
 }
+
+vector<pair<int, int>> Img::circleRange(int cx, int cy, int r) {
+	int top = cy - r;
+	int bottom = cy + r;
+	int left = cx - r;
+	int right = cx + r;
+	vector<pair<int, int>> range;
+	if (top < 0) {
+		top = 0;
+	}
+	if (bottom >= getHeight()) {
+		bottom = getHeight();
+	}
+	if (left < 0) {
+		left = 0;
+	}
+	if (right >= getWidth()) {
+		right = getWidth();
+	}
+	for (int y = top; y < bottom; y++) {
+		for (int x = left; x < right; x++) {
+			if (pow(y - cy, 2) + pow(x - cx, 2) < pow(r, 2)) {
+				range.push_back(make_pair(x, y));
+			}
+		}
+	}
+	return range;
+}
+
+bool Img::drawCircle(int x, int y, int r, int red, int green, int blue) {
+	vector<pair<int, int>> range = circleRange(x, y, r);
+	for (pair<int, int> p : range) {
+		pixels[p.second][p.first].r = red;
+		pixels[p.second][p.first].g = green;
+		pixels[p.second][p.first].b = blue;
+	}
+	return true;
+}

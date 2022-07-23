@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <utility>
+#include <cmath>
 using namespace std;
 
 class Img {
@@ -27,7 +29,7 @@ class Img {
         
         int getWidth();
         int getHeight();
-
+        vector<pair<int, int>> circleRange(int x, int y, int r);
         bool drawCircle(int x, int y, int r, int red, int green, int blue);
 };
 
