@@ -37,3 +37,18 @@ int Evolution::score_frame() {
     }
     return diff_score;
 }
+
+vector<int> Evolution::generate_circle() {
+    vector<int> circle_data;
+    // x and y coords of circle center
+    circle_data.push_back(rand() % target.getWidth());
+    circle_data.push_back(rand() % target.getHeight());
+    // radius of circle
+    circle_data.push_back(rand() % (max(target.getHeight(), target.getWidth()) / 2));
+    // r g b values
+    circle_data.push_back(rand() % 256);
+    circle_data.push_back(rand() % 256);
+    circle_data.push_back(rand() % 256);
+
+    return circle_data;
+}
