@@ -74,9 +74,9 @@ int Evolution::score_frame(int x, int y, int radius, int r, int g, int b) {
     int new_score = current_score;
     vector<pair<int, int>> pixel_coordinates = target.circleRange(x, y, radius);
     for (pair<int, int> coordinate : pixel_coordinates) {
-        int x = coordinate.first;
-        int y = coordinate.second;
-        new_score += (target(x, y).diff(r, g, b) - pixel_difference[y][x]);
+        int px = coordinate.first;
+        int py = coordinate.second;
+        new_score += (target(px, py).diff(r, g, b) - pixel_difference[py][px]);
     }
     return new_score;
 }
