@@ -9,7 +9,10 @@ class Pixel {
         unsigned char g;
         unsigned char b;
         unsigned char a;
+        
+        // Finds colour difference between this pixel and another
         int diff(Pixel p2);
+        int diff(int r2, int g2, int b2);
 };
 
 #endif

@@ -23,3 +23,11 @@ int Pixel::diff(Pixel p2) {
         pow((b - p2.b), 2)
         );
 }
+
+int Pixel::diff(int r2, int g2, int b2) {
+    return sqrt(
+        pow((r - r2), 2) + 
+        pow((g - g2), 2) + 
+        pow((b - b2), 2)
+        );
+}
