@@ -9,6 +9,7 @@ class Pixel {
         unsigned char g;
         unsigned char b;
         unsigned char a;
+        int diff(Pixel p2);
 };
 
 #endif

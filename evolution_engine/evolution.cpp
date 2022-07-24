@@ -4,8 +4,10 @@ using namespace std;
 
 Evolution::Evolution(string const path) {
     target = Img(path);
-    current_frame = Img(target.getWidth(), target.getHeight());
-    pixel_difference.resize(target.getHeight(), vector<int>(target.getWidth(), 0));
+    int width = target.getWidth();
+    int height = target.getHeight();
+    current_frame = Img(width, height);
+    pixel_difference.resize(height, vector<int>(width, 0));
 }
 
 int Evolution::score_frame() {
@@ -17,11 +19,7 @@ int Evolution::score_frame() {
             Pixel p1 = target(x, y);
             Pixel p2 = current_frame(x, y);
             // Geometric algorithm - equal weighting of all colours
-            int distance = sqrt(
-                pow((p1.r - p2.r), 2) + 
-                pow((p1.g - p2.g), 2) + 
-                pow((p1.b - p2.b), 2)
-                );
+            int distance = p1.diff(p2);
             /*
             // A 'redmean' formula on Wikipedia that's supposed to
             // to match human perception better
@@ -51,4 +49,23 @@ vector<int> Evolution::generate_circle() {
     circle_data.push_back(rand() % 256);
 
     return circle_data;
+}
+
+int Evolution::score_frame(int x, int y, int radius, int r, int g, int b) {
+    Img current_frame_copy(current_frame);
+    current_frame_copy.drawCircle(x, y, radius, r, g, b);
+    int height = target.getHeight();
+    int width = target.getWidth();
+    int diff_score = 0;
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            Pixel p1 = target(x, y);
+            Pixel p2 = current_frame_copy(x, y);
+            // Geometric algorithm - equal weighting of all colours
+            int difference = p1.diff(p2);
+            pixel_difference[y][x] = difference;
+            diff_score += difference;
+        }
+    }
+    return diff_score;
 }
