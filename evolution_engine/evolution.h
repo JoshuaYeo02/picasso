@@ -10,6 +10,7 @@ class Evolution {
         Img target;
         Img current_frame;
         vector<vector<int>> pixel_difference;
+        int current_score;
         // generates new circle, Return type should not be void
         void new_frame();
         // Returns the difference score between current and target img

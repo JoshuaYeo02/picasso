@@ -8,6 +8,7 @@ Evolution::Evolution(string const path) {
     int height = target.getHeight();
     current_frame = Img(width, height);
     pixel_difference.resize(height, vector<int>(width, 0));
+    current_score = score_frame();
 }
 
 int Evolution::score_frame() {
@@ -51,7 +52,7 @@ vector<int> Evolution::generate_circle() {
     return circle_data;
 }
 
-int Evolution::score_frame(int x, int y, int radius, int r, int g, int b) {
+/*int Evolution::score_frame(int x, int y, int radius, int r, int g, int b) {
     Img current_frame_copy(current_frame);
     current_frame_copy.drawCircle(x, y, radius, r, g, b);
     int height = target.getHeight();
@@ -63,9 +64,19 @@ int Evolution::score_frame(int x, int y, int radius, int r, int g, int b) {
             Pixel p2 = current_frame_copy(x, y);
             // Geometric algorithm - equal weighting of all colours
             int difference = p1.diff(p2);
-            pixel_difference[y][x] = difference;
             diff_score += difference;
         }
     }
     return diff_score;
+}*/
+
+int Evolution::score_frame(int x, int y, int radius, int r, int g, int b) {
+    int new_score = current_score;
+    vector<pair<int, int>> pixel_coordinates = target.circleRange(x, y, radius);
+    for (pair<int, int> coordinate : pixel_coordinates) {
+        int px = coordinate.first;
+        int py = coordinate.second;
+        new_score += (target(px, py).diff(r, g, b) - pixel_difference[py][px]);
+    }
+    return new_score;
 }
