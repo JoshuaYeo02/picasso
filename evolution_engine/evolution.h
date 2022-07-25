@@ -5,6 +5,7 @@
 #include <string>
 #include <stdlib.h>
 #include <algorithm> 
+#include <ctime>
 class Evolution {
     public:
         Img target;
@@ -20,6 +21,7 @@ class Evolution {
         // returns an vector of the info for a circle
         // of form {x, y, r, red, green, blue}
         vector<int> generate_circle();
+        pair<int, vector<int>> generation();
     public:
         Evolution(string const path);
         void natrual_selection(int iterations, string const path);

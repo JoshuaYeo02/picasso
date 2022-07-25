@@ -8,7 +8,7 @@ Img::Img() {
 Img::Img(int w, int h) {
     width = w;
     height = h;
-    pixels.resize(height, vector<Pixel>(width, Pixel(128, 128, 128)));
+    pixels.resize(height, vector<Pixel>(width, Pixel(255, 255, 255)));
 }
 
 Img::Img(string const file) {
