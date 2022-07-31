@@ -107,10 +107,12 @@ pair<int, vector<int>> Evolution::generation() {
 void Evolution::natrual_selection(int iterations, string const path) {
     vector<pair<int, vector<int>>> children_data;
     for (int i = 0; i < iterations; i++) {
-        loop_start:
         pair<int, vector<int>> new_child = generation();
-        if (new_child.first > current_score) {
-            goto loop_start;
+        vector<pair<int, int>> pixel_coordinates = target.circleRange(new_child.second[0], 
+                                                            new_child.second[1], new_child.second[2]);
+        for (pair<int, int> p : pixel_coordinates) {
+            pixel_difference[p.second][p.first] = target(p.first, p.second).diff(new_child.second[3], 
+                                                                    new_child.second[4], new_child.second[5]);
         }
         current_frame.drawCircle(new_child.second[0], new_child.second[1], 
                                  new_child.second[2], new_child.second[3], 

@@ -1,3 +1,4 @@
 demo
 *.o
 frames/*
+.DS_Store
