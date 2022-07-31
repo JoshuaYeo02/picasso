@@ -2,11 +2,12 @@
 COMPILER = g++
 COMPILER_FLAGS = -std=c++14 -c -g -Wall 
 LINKER = g++ 
-MAC = -I/opt/homebrew/Cellar/libpng/1.6.37/include/libpng16 -L/opt/homebrew/Cellar/libpng/1.6.37/lib -lpng16 -lz
+MAC = -I/opt/homebrew/Cellar/libpng/1.6.37/include/libpng16
+MAC_LINKER = g++ -I/opt/homebrew/Cellar/libpng/1.6.37/include/libpng16 -L/opt/homebrew/Cellar/libpng/1.6.37/lib -lpng16 -lz
 
 picasso : main.o img.o pixel.o evolution.o
 ifdef mac
-	$(LINKER) $(MAC) main.o img.o pixel.o evolution.o -o picasso
+	$(MAC_LINKER) main.o img.o pixel.o evolution.o -o picasso
 	rm -f *.o
 else
 	$(LINKER) main.o img.o pixel.o evolution.o -lpng -o picasso
@@ -37,4 +38,4 @@ else
 	$(COMPILER) $(COMPILER_FLAGS) ./evolution_engine/evolution.cpp
 endif
 clean: 
-	rm -f *.o demo
+	rm -f *.o picasso

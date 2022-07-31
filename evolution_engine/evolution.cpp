@@ -9,6 +9,7 @@ Evolution::Evolution(string const path) {
     current_frame = Img(width, height);
     pixel_difference.resize(height, vector<int>(width, 0));
     current_score = score_frame();
+    srand(time(0));
 }
 
 int Evolution::score_frame() {
@@ -79,4 +80,44 @@ int Evolution::score_frame(int x, int y, int radius, int r, int g, int b) {
         new_score += (target(px, py).diff(r, g, b) - pixel_difference[py][px]);
     }
     return new_score;
+}
+
+pair<int, vector<int>> Evolution::generation() {
+    vector<pair<int, vector<int>>> children_data;
+    pair<int, vector<int>> min_data;
+    int min = 999999999;
+    for (int i = 0; i < 100; i++) {
+        vector<int> circle_data = generate_circle();
+        int score = score_frame(circle_data[0], circle_data[1], circle_data[2], circle_data[3], circle_data[4], circle_data[5]);
+        children_data.push_back(make_pair(score, circle_data));
+        if (score < min) {
+            min = score;
+            min_data = children_data[i];
+        }
+    } 
+    // pair<int, vector<int>> min = children_data[0];
+    // for (pair<int, vector<int>> p : children_data) {
+    //     if (p.first < max.first) {
+    //         min = p;
+    //     }
+    // }
+    return min_data;
+}
+
+void Evolution::natrual_selection(int iterations, string const path) {
+    vector<pair<int, vector<int>>> children_data;
+    for (int i = 0; i < iterations; i++) {
+        pair<int, vector<int>> new_child = generation();
+        vector<pair<int, int>> pixel_coordinates = target.circleRange(new_child.second[0], 
+                                                            new_child.second[1], new_child.second[2]);
+        for (pair<int, int> p : pixel_coordinates) {
+            pixel_difference[p.second][p.first] = target(p.first, p.second).diff(new_child.second[3], 
+                                                                    new_child.second[4], new_child.second[5]);
+        }
+        current_frame.drawCircle(new_child.second[0], new_child.second[1], 
+                                 new_child.second[2], new_child.second[3], 
+                                 new_child.second[4], new_child.second[5]);
+        current_score = new_child.first;
+        current_frame.writeToFile(path + "frame" + to_string(i) + ".png");
+    }
 }
