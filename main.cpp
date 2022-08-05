@@ -20,7 +20,8 @@ int main() {
     string output_frames_path = "./frames/output";
 
     Evolution e = Evolution(original_image_path);
-    e.natrual_selection(3000, output_gif_path);
+    //e.generation(50, 10, 10);
+    //e.natrual_selection(3000, 500, 100, 5, output_gif_path);
     generateVideo();
     //generateGif(output_frames_path);
 }

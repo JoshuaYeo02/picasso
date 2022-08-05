@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <algorithm> 
 #include <ctime>
+#include <iostream>
 class Evolution {
     public:
         Img target;
@@ -21,10 +22,12 @@ class Evolution {
         // returns an vector of the info for a circle
         // of form {x, y, r, red, green, blue}
         vector<int> generate_circle();
-        pair<int, vector<int>> generation();
+        pair<int, vector<int>> generation(int generations, int cutoff, int mutations);
+        pair<int, vector<int>> mutate(vector<int> circle_data);
+        pair<int, vector<int>> mutation(vector<int> circle_data, int mutations);
     public:
         Evolution(string const path);
-        void natrual_selection(int iterations, string const path);
+        void natrual_selection(int iterations, int generations, int cutoff, int mutations, string const path);
 
 };
 

@@ -82,32 +82,122 @@ int Evolution::score_frame(int x, int y, int radius, int r, int g, int b) {
     return new_score;
 }
 
-pair<int, vector<int>> Evolution::generation() {
+pair<int, vector<int>> Evolution::mutate(vector<int> circle_data) {
+    int mutation_type = rand() % 3;
+    // these are arbitraily chosen
+    // mutate color
+    if (mutation_type == 0) {
+        // choose which rgb stream to change
+        int color_stream = rand() % 3;
+        // choose amount to change thats non 0 between -5, 5
+        int change_amount = rand() % 11 - 5;
+        while (change_amount == 0) {
+            change_amount = rand() % 11 - 5;
+        }
+        // change color stream
+        if (color_stream == 0) {
+            if (circle_data[3] + change_amount < 0) {
+                circle_data[3] = 0;
+            } else if (circle_data[3] + change_amount > 255) {
+                circle_data[3] = 255;
+            } else {
+                circle_data[3] += change_amount;
+            }
+        } else if (color_stream == 1) {
+            if (circle_data[4] + change_amount < 0) {
+                circle_data[4] = 0;
+            } else if (circle_data[4] + change_amount > 255) {
+                circle_data[4] = 255;
+            } else {
+                circle_data[4] += change_amount;
+            }
+        } else {
+            if (circle_data[5] + change_amount < 0) {
+                circle_data[5] = 0;
+            } else if (circle_data[5] + change_amount > 255) {
+                circle_data[5] = 255;
+            } else {
+                circle_data[5] += change_amount;
+            }
+        }
+    } else if (mutation_type == 1) { // mutate size
+        // choose how much to change size by
+        int change_amount = rand() % 7 - 3;
+        while (change_amount == 0) {
+            change_amount = rand() % 7 - 3;
+        }
+        circle_data[2] += change_amount;
+    } else { // mutate location
+        // choose whihc coord to change
+        int coord = rand() % 2;
+        // choose how much to change by
+        int change_amount = rand() % 7 - 3;
+        while (change_amount == 0) {
+            change_amount = rand() % 7 - 3;
+        }
+        if (coord == 0) {
+            if (circle_data[0] + change_amount < 0) {
+                circle_data[0] = 0;
+            } else if (circle_data[0] + change_amount >= target.getWidth()) {
+                circle_data[0] = target.getWidth() - 1;
+            } else {
+                circle_data[0] += change_amount;
+            }
+        } else {
+            if (circle_data[1] + change_amount < 0) {
+                circle_data[1] = 0;
+            } else if (circle_data[1] + change_amount >= target.getHeight()) {
+                circle_data[1] = target.getHeight() - 1;
+            } else {
+                circle_data[1] += change_amount;
+            }
+        }
+    }
+    int score = score_frame(circle_data[0], circle_data[1], circle_data[2], circle_data[3], circle_data[4], circle_data[5]);
+    return make_pair(score, circle_data);
+}
+
+pair<int, vector<int>> Evolution::mutation(vector<int> circle_data, int mutations) {
+    pair<int, vector<int>> min_child;
+    int min_score = 2147483647;
+    for (int i = 0; i < mutations; i++) {
+        pair<int, vector<int>> mutated_child = mutate(circle_data);
+        if (mutated_child.first < min_score) {
+            min_child = mutated_child;
+        }
+    }
+    return min_child;
+}
+
+pair<int, vector<int>> Evolution::generation(int generations, int cutoff, int mutations) {
     vector<pair<int, vector<int>>> children_data;
-    pair<int, vector<int>> min_data;
-    int min = 999999999;
-    for (int i = 0; i < 100; i++) {
+
+    // Get generations of children
+    for (int i = 0; i < generations; i++) {
         vector<int> circle_data = generate_circle();
         int score = score_frame(circle_data[0], circle_data[1], circle_data[2], circle_data[3], circle_data[4], circle_data[5]);
         children_data.push_back(make_pair(score, circle_data));
-        if (score < min) {
-            min = score;
-            min_data = children_data[i];
-        }
     } 
-    // pair<int, vector<int>> min = children_data[0];
-    // for (pair<int, vector<int>> p : children_data) {
-    //     if (p.first < max.first) {
-    //         min = p;
-    //     }
-    // }
+
+    // soort children and take the top cutoff number of children
+    sort(children_data.begin(), children_data.end(), [](auto &l, auto &r) { return l.first < r.first;});
+    children_data.erase(children_data.begin() + cutoff, children_data.end());
+
+    // mutate the top children and take the best
+    pair<int, vector<int>> min_data = children_data[0];
+    for (pair<int, vector<int>> p : children_data) {
+       pair<int, vector<int>> mutated_child = mutation(p.second, mutations);
+       if (mutated_child.first < min_data.first) {
+            min_data = mutated_child;
+       }
+    }
     return min_data;
 }
 
-void Evolution::natrual_selection(int iterations, string const path) {
+void Evolution::natrual_selection(int iterations, int generations, int cutoff, int mutations, string const path) {
     vector<pair<int, vector<int>>> children_data;
-    for (int i = 0; i < iterations; i++) {
-        pair<int, vector<int>> new_child = generation();
+    for (int i = 1; i <= iterations; i++) {
+        pair<int, vector<int>> new_child = generation(generations, cutoff, mutations);
         vector<pair<int, int>> pixel_coordinates = target.circleRange(new_child.second[0], 
                                                             new_child.second[1], new_child.second[2]);
         for (pair<int, int> p : pixel_coordinates) {
@@ -119,5 +209,7 @@ void Evolution::natrual_selection(int iterations, string const path) {
                                  new_child.second[4], new_child.second[5]);
         current_score = new_child.first;
         current_frame.writeToFile(path + "frame" + to_string(i) + ".png");
+        cout << "Frame " << i << endl;
+        cout << "Current Score: " << current_score << endl;
     }
 }
